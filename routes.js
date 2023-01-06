@@ -42,7 +42,8 @@ router.get("/:id/", async function (req, res, next) {
   const customer = await Customer.get(req.params.id);
 
   const reservations = await customer.getReservations();
-
+  const fullName = await customer.fullName();
+  console.log('fullName',fullName);
   return res.render("customer_detail.html", { customer, reservations });
 });
 
@@ -50,6 +51,7 @@ router.get("/:id/", async function (req, res, next) {
 
 router.get("/:id/edit/", async function (req, res, next) {
   const customer = await Customer.get(req.params.id);
+  console.log('customer',customer);
 
   res.render("customer_edit_form.html", { customer });
 });
