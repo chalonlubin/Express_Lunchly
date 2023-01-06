@@ -72,15 +72,23 @@ class Customer {
       [`%${term}%`]
     );
 
-    const customer = results.rows[0];
+    return results.rows.map((c) => new Customer(c));
+  }
 
-    if (customer === undefined) {
-      const err = new Error(`No such customer: ${id}`);
-      err.status = 404;
-      throw err;
-    }
+  /** Gets top 10 customers with most reservations */
+  static async topTen() {
+    const results = await db.query(
+      `SELECT c.id,
+        first_name AS "firstName",
+        last_name  AS "lastName"
+      FROM customers as c
+      JOIN reservations as r
+      ON c.id = r.customer_id
+      GROUP BY c.id
+      ORDER BY COUNT(r.id) DESC LIMIT 10;`
+    )
 
-    return new Customer(customer);
+    return results.rows.map((c) => new Customer(c));
   }
 
 

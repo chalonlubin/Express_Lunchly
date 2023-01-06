@@ -12,15 +12,29 @@ const router = new express.Router();
 
 /** Homepage: show list of customers. */
 
-router.get("/random/", async function (req, res, next) {
-  return res.render("customer_new_form.html");
-});
-
 router.get("/", async function (req, res, next) {
   const customers = await Customer.all();
   return res.render("customer_list.html", { customers });
 });
 
+//** Handle route to search for customers. */
+
+router.get("/search/", async function(req,res,next){
+  //TODO: how did the query string end up in the url?
+  if (req.query === undefined) {
+    throw new BadRequestError();
+  }
+  const term = req.query.search;
+  const customers =  await Customer.search(term);
+  return res.render("search.html", { customers });
+});
+
+/** Handle route that displays 10 customers with most reservations */
+
+router.get("/top-ten/", async function (req, res, next) {
+  const customers = await Customer.topTen();
+  return res.render("top-ten.html", { customers });
+});
 
 /** Form to add a new customer. */
 
@@ -40,6 +54,7 @@ router.post("/add/", async function (req, res, next) {
 
   return res.redirect(`/${customer.id}/`);
 });
+
 
 /** Show a customer, given their ID. */
 
@@ -75,6 +90,7 @@ router.post("/:id/edit/", async function (req, res, next) {
   return res.redirect(`/${customer.id}/`);
 });
 
+
 /** Handle adding a new reservation. */
 
 router.post("/:id/add-reservation/", async function (req, res, next) {
@@ -96,19 +112,5 @@ router.post("/:id/add-reservation/", async function (req, res, next) {
 
   return res.redirect(`/${customerId}/`);
 });
-
-//** Handle route to search for customers. */
-
-router.get("/search", async function (req, res, next) {
-  // if (req.body === undefined) {
-  //   throw new BadRequestError();
-  // }
-  console.log("HEYYYYYYYYYYYYYY")
-  // const term = req.body.search;
-  // console.log("TERM HERE!!!", term)
-  // const customers =  await Customer.search(term);
-  // console.log("CUSTOMERSSSS!!!!!", customers)
-  // return res.render("customer_list.html", { customers });
-})
 
 module.exports = router;
