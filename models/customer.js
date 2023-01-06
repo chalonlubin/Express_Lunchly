@@ -85,7 +85,8 @@ class Customer {
       JOIN reservations as r
       ON c.id = r.customer_id
       GROUP BY c.id
-      ORDER BY COUNT(r.id) DESC LIMIT 10;`
+      ORDER BY COUNT(*) DESC
+      LIMIT 10;`
     )
 
     return results.rows.map((c) => new Customer(c));

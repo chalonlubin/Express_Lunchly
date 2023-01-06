@@ -27,17 +27,17 @@ class Reservation {
 
   static async getReservationsForCustomer(customerId) {
     const results = await db.query(
-          `SELECT id,
+      `SELECT id,
                   customer_id AS "customerId",
                   num_guests AS "numGuests",
                   start_at AS "startAt",
                   notes AS "notes"
            FROM reservations
            WHERE customer_id = $1`,
-        [customerId],
+      [customerId]
     );
 
-    return results.rows.map(row => new Reservation(row));
+    return results.rows.map((row) => new Reservation(row));
   }
 
   /** saves a reservation to a customer */
@@ -50,21 +50,17 @@ class Reservation {
         [this.customerId, this.numGuests, this.startAt, this.notes]
       );
       this.id = result.rows[0].id;
+    } else {
+      await db.query(
+        `UPDATE reservations
+             SET num_guests=$1,
+                 start_at=$2,
+                 notes=$3
+             WHERE id = $4`,
+        [this.numGuests, this.startAt, this.notes, this.id]
+      );
     }
-
-    // TODO: to update reservation?
-    // else {
-    //   await db.query(
-    //     `UPDATE reservations
-    //          SET num_guests=$1,
-    //              start_at=$2,
-    //              notes=$3
-    //          WHERE id = $4`,
-    //     [this.numGuests, this.startAt, this.notes, this.id]
-    //   );
-
   }
 }
-
 
 module.exports = Reservation;

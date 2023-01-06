@@ -17,6 +17,7 @@ router.get("/", async function (req, res, next) {
   return res.render("customer_list.html", { customers });
 });
 
+
 //** Handle route to search for customers. */
 
 router.get("/search/", async function(req,res,next){
