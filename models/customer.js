@@ -56,6 +56,34 @@ class Customer {
     return new Customer(customer);
   }
 
+
+  /** search a customer by search bar input. */
+
+  static async search(term) {
+    const results = await db.query(
+      `SELECT id,
+                  first_name AS "firstName",
+                  last_name  AS "lastName",
+                  phone,
+                  notes
+              FROM customers as "c"
+              WHERE c.first_name ILIKE $1
+              OR c.last_name ILIKE $1`,
+      [`%${term}%`]
+    );
+
+    const customer = results.rows[0];
+
+    if (customer === undefined) {
+      const err = new Error(`No such customer: ${id}`);
+      err.status = 404;
+      throw err;
+    }
+
+    return new Customer(customer);
+  }
+
+
   /** get all reservations for this customer. */
 
   async getReservations() {

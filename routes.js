@@ -12,10 +12,15 @@ const router = new express.Router();
 
 /** Homepage: show list of customers. */
 
+router.get("/random/", async function (req, res, next) {
+  return res.render("customer_new_form.html");
+});
+
 router.get("/", async function (req, res, next) {
   const customers = await Customer.all();
   return res.render("customer_list.html", { customers });
 });
+
 
 /** Form to add a new customer. */
 
@@ -42,8 +47,6 @@ router.get("/:id/", async function (req, res, next) {
   const customer = await Customer.get(req.params.id);
 
   const reservations = await customer.getReservations();
-  const fullName = await customer.fullName();
-  console.log('fullName',fullName);
   return res.render("customer_detail.html", { customer, reservations });
 });
 
@@ -93,5 +96,19 @@ router.post("/:id/add-reservation/", async function (req, res, next) {
 
   return res.redirect(`/${customerId}/`);
 });
+
+//** Handle route to search for customers. */
+
+router.get("/search", async function (req, res, next) {
+  // if (req.body === undefined) {
+  //   throw new BadRequestError();
+  // }
+  console.log("HEYYYYYYYYYYYYYY")
+  // const term = req.body.search;
+  // console.log("TERM HERE!!!", term)
+  // const customers =  await Customer.search(term);
+  // console.log("CUSTOMERSSSS!!!!!", customers)
+  // return res.render("customer_list.html", { customers });
+})
 
 module.exports = router;
