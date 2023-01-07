@@ -16,6 +16,19 @@ class Customer {
     this.notes = notes;
   }
 
+  //** getter for notes. */
+  get notes() {
+    return this._notes
+  }
+  //** setter for notes. */
+  set notes(content) {
+    if (!content) {
+      content = ""
+    } else {
+      this._notes = content;
+    }
+  };
+
   /** find all customers. */
 
   static async all() {

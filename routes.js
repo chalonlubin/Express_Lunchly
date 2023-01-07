@@ -13,22 +13,26 @@ const router = new express.Router();
 /** Homepage: show list of customers. */
 
 router.get("/", async function (req, res, next) {
+  if (req.query.search) {
+    const term = req.query.search;
+    const customers =  await Customer.search(term);
+    return res.render("search.html", { customers })
+  } else {
+
   const customers = await Customer.all();
   return res.render("customer_list.html", { customers });
-});
+}});
 
 
 //** Handle route to search for customers. */
 
-router.get("/search/", async function(req,res,next){
-  //TODO: how did the query string end up in the url?
-  if (req.query === undefined) {
-    throw new BadRequestError();
-  }
-  const term = req.query.search;
-  const customers =  await Customer.search(term);
-  return res.render("search.html", { customers });
-});
+// router.get("/search/", async function(req,res,next){
+//   //TODO: how did the query string end up in the url?
+//   if (req.query === undefined) {
+//     throw new BadRequestError();
+//   }
+//   ;
+// });
 
 /** Handle route that displays 10 customers with most reservations */
 
@@ -61,7 +65,8 @@ router.post("/add/", async function (req, res, next) {
 
 router.get("/:id/", async function (req, res, next) {
   const customer = await Customer.get(req.params.id);
-
+  console.log("NOTES HERE",customer.notes = "Hello")
+  console.log("NOTES HERE",customer.notes)
   const reservations = await customer.getReservations();
   return res.render("customer_detail.html", { customer, reservations });
 });

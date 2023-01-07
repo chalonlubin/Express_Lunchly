@@ -17,6 +17,7 @@ class Reservation {
     this.notes = notes;
   }
 
+
   /** formatter for startAt */
 
   getFormattedStartAt() {
@@ -62,5 +63,6 @@ class Reservation {
     }
   }
 }
+
 
 module.exports = Reservation;
